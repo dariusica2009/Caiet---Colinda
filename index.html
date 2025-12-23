@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lista cântări — static (din cod)</title>
+  <meta name="description" content="Pagina afișează titluri și versuri încărcate direct din cod (fără editare)." />
+  <style>
+    :root{--bg:#081225;--card:#0b1a2a;--accent:#60a5fa;--muted:#93a5bd;--radius:14px;font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#041427 0%, #071a2e 100%);color:#eef6ff;-webkit-font-smoothing:antialiased}
+    header{padding:16px;display:flex;align-items:center;gap:12px}
+    header h1{font-size:18px;margin:0}
+    main{padding:14px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:12px;box-shadow:0 8px 24px rgba(2,6,23,0.6)}
+    .list{display:grid;gap:10px;margin-top:8px}
+    .item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:var(--card);cursor:pointer}
+    .thumb{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:700;color:#032033}
+    .title{font-size:15px}
+    .muted{font-size:13px;color:var(--muted)}
+
+    /* overlay */
+    .overlay{position:fixed;inset:0;background:linear-gradient(180deg, rgba(2,6,23,0.85), rgba(1,4,13,0.96));display:none;flex-direction:column}
+    .overlay-header{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .back{background:transparent;border:0;color:var(--accent);font-weight:700;padding:8px;border-radius:8px}
+    .overlay-body{padding:14px;overflow:auto}
+    .lyrics{white-space:pre-wrap;font-size:16px;line-height:1.6}
+
+    footer{padding:12px;text-align:center;color:var(--muted);font-size:13px}
+
+    @media(min-width:720px){main{max-width:720px;margin:12px auto}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lista cântări</h1>
+    <div style="margin-left:auto;color:var(--muted);font-size:13px">static — edit in code</div>
+  </header>
+
+  <main>
+    <div class="card">
+      
+      <div class="list" id="list"></div>
+    </div>
+  </main>
+
+  <div class="overlay" id="overlay">
+    <div class="overlay-header">
+      <button id="closeBtn" class="back">◀ Înapoi</button>
+      <div style="flex:1">
+        <div id="songTitle" style="font-weight:700;font-size:16px"></div>
+        <div id="songNote" class="muted">Versuri</div>
+      </div>
+    </div>
+    <div class="overlay-body">
+      <div class="lyrics" id="lyricsArea"></div>
+    </div>
+  </div>
+
+
+  <script>
+    /*
+      Aici editezi lista de cântări direct în cod.
+      - Adaugă un obiect { id: 'unic', title: 'Titlu cântare', lyrics: `Versurile\npe mai multe linii` }
+      - Păstrează `lyrics` între backticks pentru a putea avea linii noi ușor.
+      - `id` trebuie să fie unic (poți folosi 'c1', 'c2', etc.)
+
+      Exemplu:
+        { id: 'c1', title: 'O, Doamne', lyrics: `Strofa 1\nRefren...` }
+    */
+
+    const SONGS = [
+      // === Am adăugat aici titlurile tale cu versurile furnizate ===
+      { id: 'c1', title: 'Glasul Lui rasuna pe la porti pe la feresti - La M', lyrics: `1. Glasul Lui răsună pe la porţi, pe la fereşti,
+Nu știu dacă altă şansă, o să mai primeşti,
+Azi Isus, El spune, prin cuvinte de colind:
+Hai deschide, nu mai sta, vreau să intru-n casa ta!
+
+R: /:Am venit şi anul ăsta, am bătut la ușa ta,
+M-am oprit ades la tine, vreau să-ţi dau mântuirea,
+Astăzi cât mai sunt iubire, de ce zăboveşti?
+Cânt-a cerului cerului oștire, vino să te pocăiești!:/
+
+2. Îţi cântăm, iubit prieten, Isus e stăpân
+Peste iesle, peste cruce, peste-ntreg pământ,
+Omule, eşti o suflare, viaţa nu-i a ta,
+O poţi pierde, dar ascultă, îți vorbeşte Dragostea!
+
+3. Nu-i în lume altă voce, glas mai primitor,
+Să te cheme, să te-aştepte, e Blândul Păstor,
+Insă nu uita ce spune în al său Cuvânt:
+Şi răbdarea, şi-aşteptarea se vor sfârşi-n curând.` },
+
+      { id: 'c2', title: 'Buna seara oameni buni - Mi M', lyrics: `1. Bună seara oameni buni
+Am venit să colindăm,
+Am venit cu bucurie
+Gânduri bune să urăm.
+
+R: Că-ntr-o sară că aceasta
+S-o născut Isus Hristos
+Pe pământ la oameni o venit
+Că-ntr-o sară că aceasta
+S-o născut Isus Hristos
+Cerul cu pământul s-o unit.
+
+2. Bună seara oameni buni
+Am venit din depărtare
+Am venit cu drag la voi
+Să v-aducem vestea mare.
+
+3. Bună seara oameni buni
+Vă dorim doar sănătate
+Să iubiţi chiar pe duşmani
+Să umblaţi după dreptate.
+
+4. Bună seara oameni buni
+Pe Isus să ÎL slujiţi
+Depărtându-vă de rău
+Să fiţi pururi oameni sfinţi.
+
+5. Bună seara oameni buni
+De-aici mergem mai departe
+Vrem cu drag şi noi să ducem
+Vestea bună-n alte sate.` },
+
+      { id: 'c3', title: 'Am pornit cu vestea buna - Mi M', lyrics: `1. Am pornit cu vestea bună
+Lui Isus cântări răsună
+Peste munţi si văi.
+Răsună şi-n casa voastră
+Glasul meu pe la fereastră
+Cânt de zurgalai.
+
+/: Şi-oi merge din sat în sat
+Drumuri lungi am de umblat
+Şi de colindat. :/
+
+2. Şi-am pornit cu traista-n spate
+Prin oraşe şi prin sate
+Să spun de Hristos.
+Pe la case de boieri
+Si colibe de pastori
+Să cânt bucuros.
+
+3. Că departe-n betleem
+S-a născut un fiu din cer
+Domnul Dumnezeu.
+Cor de îngeri au cântat
+Fie Domnul lăudat
+Vreau să-i cânt și eu.
+
+4. Ș-am bătut din poartă-n poartă
+Să duc vestea minunată
+Sa născut Hristos.
+Să vestesc cu bucurie
+Că ne-aduce mântuire
+Traiul Luminos.` },
+
+      { id: 'c4', title: 'Din a cerului marire - Sol M', lyrics: `1. Din a cerului mărire,
+Pentru omul păcătos,
+Să ne aduci mântuire
+Ai venit, Isus Hristos.
+
+R: /: Îți aducem închinare,
+Cu iubire Te lăudăm
+În această sărbătoare,
+Rege Sfânt Te adorăm. :/
+
+2. N-avem smirnă, nici tămâie,
+Şi nici aur ca să-Ți dăm,
+Dar dorim pentru vecie,
+Mesia, să Îţi cântăm.
+
+3. Stea ce-ai răsărit odată
+Peste ţara Israel,
+Ne sfințeşte viaţa toată,
+Mesia Emanuel.
+
+4. De aproape sau departe,
+Tineri, vârstnici sau copii,
+Te chemăm, Isus, ca frate,
+Domn şi Rege să ne fii.
+
+5. Iar acum cu umilinţă
+Lângă iesle ne-aplecăm
+Să-Ți jurăm Isus credință
+Pân' la moarte să-Ți urmăm.` },
+
+      { id: 'c5', title: 'Noapte sfanta de craciun - Mi M', lyrics: `1. /: Noapte sfântă de Crăciun :/
+/: Îngerii cântă osana
+Noapte sfântă de Crăciun :/
+
+2. /: Jos în ieslea Betleem :/
+/: Dumnezeu la noi venise
+Jos în iesle[a] Betleem :/
+
+3. /: Să cântăm cu îngerii :/
+/: Pace şi bună-nvoire
+Să cântăm cu îngerii :/
+
+4. /: Să-i aducem toți în dar :/
+/: Inima ca mulţumire
+Să-i aducem toți în dar :/
+
+5. /: Mântuire ne-a adus :/
+/: Glorie în veci lui Isus
+Mântuire ne-a adus :/
+
+6. /: Aleluia lui Hristos :/
+/: Mic şi mare toţi să cânte
+S-a născut Isus Hristos. :/` },
+
+      { id: 'c6', title: 'Iata cum veni la noi Domnul Isus - Sol M', lyrics: `1. Iată cum veni la noi Domnul Isus
+Pruncul Sfânt venit de sus.
+Cum Fiul lui Dumnezeu s-a coborât,
+Ca să ne salveze de iad.
+
+R: /: El s-a născut la miezul nopţii
+Aducând cu El lumina.
+El a venit ca zorii zilei,
+Întunericul risipind. :/
+
+2. Păstorașii L-au căutat și L-au gasit
+Şi la iesle s-au închinat.
+Şi de-atunci cine pe El L-a căutat
+Prin credinţă L-au găsit.
+
+C: /: S-a născut, s-a născut
+La miezul nopţii :/` },
+
+      { id: 'c7', title: 'Nu a fost si nu va fi vreodata - Sol M', lyrics: `1. Nu a fost şi nu va fi vreodată
+Veste mai frumoasă pe pământ
+Decât vestea că în lume
+S-a născut un prunc Prea Sfânt.
+Nu se va mai auzi vreodată
+De un fiu de Dumnezeu,
+El, ce singurul vine din Tatăl,
+Minunatul Salvator, Isus!
+
+R: /:Să-i cântăm slavă, slavă
+Oricine pe pământ
+Celui ce veşnic
+Rămâne-al Său Cuvânt. :/
+
+2. S-a-mplinit tot ce se profeţise
+Îngerii cântau ca niciodat’
+Căci al nopţii întuneric
+De cântări a răsunat.
+A venit o zi cu noi speranţe,
+Noi nădejdi, clădite nu-n nisip
+Ci pe stânca tare-a vieţii,
+Pe Acel ce-i veşnic nesfârşit!` },
+
+      { id: 'c8', title: 'Vestea s-a nascut Hristos - Fa M', lyrics: `1. Vestea S-a născut Hristos
+Astăzi pe pământ răsună,
+A venit la oameni jos
+Să aducă Vestea Bună.
+
+R: Glorie! Glorie! Pruncului venit de sus!
+Glorie! Glorie! Bucurie ne-a adus!
+Îl slăvim pe împărat,
+Mântuire-n dar ne-a dat,
+Fie-I Numele lăudat!
+
+2. Salvatorul omenirii
+Blând, smerit Tu ai venit,
+Ne-ai arătat lecția iubirii,
+Și cu Tatăl ne-ai unit.
+
+3. Pământu-ntreg să se închine
+Eternului Hristos Mesia.
+Vrednic este Cel ce vine
+De le câmpul din Iudeea.` },
+
+      { id: 'c9', title: 'Hai deschide inima ta - La M', lyrics: `R: Hai deschide inima ta
+Să găseşti minunea din ea
+Că-ntr-o iesle şi-n viaţa ta
+S-a născut Mesia.
+
+1. Cu iubirea Lui şi cu har din harul Său divin
+Împodobeşti viaţa mea, eu te colind
+Sărbători de vis, cu Hristos născut în inimă
+Veşnicia s-o trăieşti eu te colind
+
+R: Hai deschide inima ta
+Să găseşti minunea din ea
+Că-ntr-o iesle şi-n viaţa ta
+S-a născut Mesia.
+
+2. Veşnicia Lui şi de toată slava s-a lăsat
+Pe pământ s-a întrupat Pruncul Isus
+Să fii fericit, mântuit şi liber să trăieşti
+An de an pe Isus să-l iubeşti, eu te colind.` }
+    ]
+
+    const listEl = document.getElementById('list')
+    const overlay = document.getElementById('overlay')
+    const lyricsArea = document.getElementById('lyricsArea')
+    const songTitle = document.getElementById('songTitle')
+    const closeBtn = document.getElementById('closeBtn')
+
+    function renderList(){
+      listEl.innerHTML = ''
+      if(!SONGS || SONGS.length === 0){
+        listEl.innerHTML = '<div class="muted">Nu există cântări definite. Editează array-ul <code>SONGS</code> în cod.</div>'
+        return
+      }
+      SONGS.forEach(s => {
+        const it = document.createElement('div')
+        it.className = 'item'
+        it.tabIndex = 0
+        const initials = (s.title || 'Untitled').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase()
+        it.innerHTML = `
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="thumb">${escapeHtml(initials)}</div>
+            <div>
+              <div class="title">${escapeHtml(s.title || 'Fără titlu')}</div>
+              <div class="muted">${escapeHtml((s.lyrics||'').split('\n')[0].slice(0,40))}${(s.lyrics||'').length>40? '...' : ''}</div>
+            </div>
+          </div>
+          <div style="opacity:0.9">▶</div>
+        `
+        it.addEventListener('click', ()=>openSong(s.id))
+        it.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') openSong(s.id) })
+        listEl.appendChild(it)
+      })
+    }
+
+    function openSong(id){
+      const s = SONGS.find(x=>x.id === id)
+      if(!s) return
+      songTitle.textContent = s.title
+      lyricsArea.textContent = s.lyrics || ''
+      overlay.style.display = 'flex'
+      // scroll to top of lyrics
+      overlay.querySelector('.overlay-body').scrollTop = 0
+    }
+
+    closeBtn.addEventListener('click', ()=> overlay.style.display = 'none')
+    overlay.addEventListener('click', (e)=>{
+      // click outside body closes overlay
+      if(e.target === overlay) overlay.style.display = 'none'
+    })
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]
+      })
+    }
+
+    // initial render
+    renderList()
+  </script>
+</body>
+</html>
